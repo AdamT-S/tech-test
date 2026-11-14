@@ -16,4 +16,7 @@ class BondTrade(BaseTrade):
 
     @property
     def trade_type(self) -> str:
-        return BondTrade.GOV_BOND_TRADE_TYPE
+        if self.type_of_trade == 'GovBond':
+            return BondTrade.GOV_BOND_TRADE_TYPE
+        elif self.type_of_trade == 'CorpBond':
+             return BondTrade.CORP_BOND_TRADE_TYPE
