@@ -8,6 +8,7 @@ from techtest.models.trade import Trade
 
 class BaseTrade(Trade):
     def __init__(self) -> None:
+        self.type_of_trade: str | None = None
         self.trade_date: datetime = datetime.min
         self.counterparty: str | None = None
         self.instrument: str | None = None
