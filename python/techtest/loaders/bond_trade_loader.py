@@ -21,6 +21,7 @@ class BondTradeLoader:
     def _create_trade_from_line(self, line: str) -> BondTrade:
         items = line.split(self._SEPARATOR)
         trade = BondTrade(items[6])
+        trade.type_of_trade = items[0]
         trade.trade_date = datetime.fromisoformat(items[1])
         trade.instrument = items[2]
         trade.counterparty = items[3]
