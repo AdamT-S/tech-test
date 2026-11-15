@@ -23,11 +23,19 @@ class SerialPricer:
                 pricer = self._pricers[trade.trade_type]
                 pricer.price(trade, result_receiver)
 
-    def _load_pricers(self) -> PricingEngine:
+    def _load_pricers(self) -> None:
         pricing_config_loader = PricingConfigLoader()
         pricing_config_loader.config_file = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "pricing_config", "PricingEngines.xml")
         pricer_config = pricing_config_loader.load_config()
 
         for config_item in pricer_config:
-            raise NotImplementedError()
+            module = importlib.import_module(config_item.module)
+            pricing_engine_class = getattr(module, config_item.class_name)
+            pricing_engine = pricing_engine_class()
+
+            #These are to test if the pricer works
+            #print(self._pricers)
+            #raise RuntimeError("TEST FAILURE - just checking")
+
+           self._pricers[config_item.trade_type] = pricing_engine
