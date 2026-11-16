@@ -6,10 +6,12 @@ from techtest.models import ScalarResults
 class ScreenResultPrinter:
     def print_results(self, results: ScalarResults) -> None:
         for result in results:
-            # Write code here to print out the results such that we have :
-            # TradeID : Result : Error
-            # If there is no result then the output should be :
-            # TradeID : Error
-            # If there is no error the output should be :
-            # TradeID : Result
-            pass
+            if result.result != None and result.error != None:
+                 print(f"{result.trade_id} : {result.result} : {result.error}")
+
+            elif result.result != None:
+                print(f"{result.trade_id} : {result.result}")
+
+            else:
+                print(f"{result.trade_id} : {result.error}")
+
