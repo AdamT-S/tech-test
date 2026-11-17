@@ -13,10 +13,7 @@ class BondTradeLoader:
         self.data_file = data_file
 
     def load_trades(self) -> Iterable[Trade]:
-        trade_list = BondTradeList()
-        self._load_trades_from_file(self.data_file, trade_list)
-
-        return trade_list
+        yield from self._load_trades_from_file(self.data_file, trade_list)
 
     def _create_trade_from_line(self, line: str) -> BondTrade:
         items = line.split(self._SEPARATOR)
@@ -30,9 +27,9 @@ class BondTradeLoader:
 
         return trade
 
-    def _load_trades_from_file(self, filename: str, trade_list: BondTradeList) -> None:
+    def _load_trades_from_file(self, filename: str, trade_list: BondTradeList) -> Generator[BondTrade]:
         # utf-8-sig skips the byte order mark at the start of the file
         with open(filename, encoding="utf-8-sig") as stream:
             next(stream, None)  # Skip the header line
             for line in stream:
-                trade_list.add(self._create_trade_from_line(line.rstrip("\r\n")))
+                yield self._create_trade_from_line(line.rstrip("\r\n"))
