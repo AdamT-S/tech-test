@@ -15,9 +15,7 @@ class FxTradeLoader:
 
     # NOTE: This method is only here to allow the solution to run prior to the test being completed.
     def load_trades(self) -> Iterable[Trade]:
-        trade_list = TradeList()
-        self._load_trades_from_file(self.data_file, trade_list)
-        return trade_list
+        yield from self._load_trades_from_file(self.data_file, trade_list)
 
     def _create_fxtrade_from_line(self, line: str) -> FxTrade:
         items = line.split(self._SEPERATOR)
@@ -39,7 +37,7 @@ class FxTradeLoader:
 
         return fxtrade
 
-    def _load_trades_from_file(self, filename: str, trade_list: TradeList) -> None:
+    def _load_trades_from_file(self, filename: str, trade_list: TradeList) -> Generator[FxTrade, Any, None]:
         # utf-8-sig skips the byte order mark at the start of the file
         with open(filename, encoding="utf-8-sig") as stream:
             next(stream, None) # Skip the metadata line
@@ -47,5 +45,5 @@ class FxTradeLoader:
             for line in stream:
                 if not line.startswith(("FxSpot", "FxFwd")):
                     continue
-                trade_list.add(self._create_fxtrade_from_line(line.rstrip("\r\n")
+                yield self._create_fxtrade_from_line(line.rstrip("\r\n")
     
